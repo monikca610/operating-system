@@ -1,0 +1,197 @@
+#include <stdio.h>
+#define MAX_FRAMES 10
+#define MAX_REFERENCES 100
+int frames[MAX_FRAMES]; // Page frames
+int freq[MAX_FRAMES]; // Frequency array for
+LFU int time[MAX_FRAMES]; // Time
+array for LRU
+int pageFaults = 0, frameCount, referenceCount;
+// Initialize frames to -1
+(empty) void initFrames()
+{
+for (int i = 0; i < frameCount; i++)
+{
+frames[i] = -1;
+freq[i] = 0;
+time[i] = 0;
+}
+pageFaults = 0;
+}
+
+// Check if a page exists in the frames, return its
+index or -1 int findPage(int page)
+{
+for (int i = 0; i < frameCount; i++)
+{
+if (frames[i] == page)
+{
+return i;
+}
+}
+return -1;}
+
+// Display current state of frames
+void displayFrames()
+{
+for (int i = 0; i < frameCount; i++)
+{
+if (frames[i] ==
+-1) printf("- ");
+else
+printf("%d ", frames[i]);
+}
+printf("\n");
+}
+
+// FIFO Page Replacement
+Algorithm void fifo(int references[]
+{
+int head = 0; // FIFO replacement pointer
+initFrames();
+for (int i = 0; i < referenceCount; i++)
+{
+int page = references[i];
+if (findPage(page) == -1) { // Page fault
+frames[head] = page;
+head = (head + 1) % frameCount;
+pageFaults++;
+}
+displayFrames();
+}
+printf("Total Page Faults using FIFO: %d\n", pageFaults);
+}
+// LRU Page Replacement
+Algorithm void lru(int references[])
+{
+initFrames();
+
+for (int i = 0; i < referenceCount; i++)
+{
+int page = references[i];
+int index =
+findPage(page); if
+(index != -1)
+{
+time[index] = i; // Update time of last use
+}
+else
+{
+// Find the Least Recently Used (smallest
+time) int lruIndex = 0;
+for (int j = 1; j < frameCount; j++)
+{
+if (time[j] < time[lruIndex])
+{
+lruIndex = j;
+}
+}
+frames[lruIndex] = page;
+time[lruIndex] = i; // Update time of
+use pageFaults++;
+}
+displayFrames();
+}
+printf("Total Page Faults using LRU: %d\n", pageFaults);
+}
+
+// LFU Page Replacement Algorithm
+void lfu(int references[])
+{
+initFrames();
+for (int i = 0; i < referenceCount; i++)
+{
+int page = references[i];
+int index = findPage(page);
+if (index != -1)
+{
+freq[index]++; // Increase frequency
+}
+else
+{
+// Find the Least Frequently Used (smallest
+freq) int lfuIndex = 0;
+for (int j = 1; j < frameCount; j++)
+{
+if (freq[j] < freq[lfuIndex])
+{
+lfuIndex = j;
+}
+}
+frames[lfuIndex] = page;
+freq[lfuIndex] = 1; // Reset frequency for the new
+page pageFaults++;
+}
+displayFrames();
+}
+printf("Total Page Faults using LFU: %d\n", pageFaults);
+}
+
+// Main function
+int main()
+{
+int references[MAX_REFERENCES], choice;
+// User input for page reference string
+printf("Enter number of page references: ");
+scanf("%d", &referenceCount);
+
+printf("Enter the page reference string:
+"); for (int i = 0; i < referenceCount;
+i++)
+{
+scanf("%d", &references[i]);
+}
+
+// User input for number of
+frames printf("Enter number of
+frames: "); scanf("%d",
+&frameCount);
+// Menu for algorithm selection
+printf("\nChoose Page Replacement Algorithm:\n");
+printf("1. FIFO\n2. LRU\n3. LFU\nEnter your choice:
+"); scanf("%d", &choice);
+switch (choice)
+{
+case 1:
+printf("\nExecuting FIFO Page Replacement...\n");
+fifo(references);
+break;
+case 2:
+printf("\nExecuting LRU Page Replacement...\n");
+lru(references);
+break;
+case 3:
+printf("\nExecuting LFU Page Replacement...
+\n"); lfu(references);
+break;
+default:
+printf("Invalid choice! Please enter 1, 2, or 3.\n");
+}
+return 0;
+
+}
+
+Sample Input and Output:
+
+Enter number of page references: 12
+Enter the page reference string: 1 3 0 3 5 6 3 5 7
+3 0 1 Enter number of frames: 3
+
+Choose Page Replacement Algorithm:
+1. FIFO
+2. LRU
+3. LFU
+Enter your choice: 2
+Executing LRU Page
+Replacement... 1 - -
+1 3 -
+1 3 0
+1 3 0
+5 3 0
+5 6 0
+5 6 3
+5 6 3
+7 6 3
+7 6 3
+0 6 3
+0 6 1
+Total Page Faults using LRU: 10
