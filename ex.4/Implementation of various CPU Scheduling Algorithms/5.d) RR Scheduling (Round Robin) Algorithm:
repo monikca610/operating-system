@@ -1,0 +1,124 @@
+#include <stdio.h>
+void findWaitingTime(int processes[], int n, int bt[], int wt[], int quantum)
+{
+int rem_bt[n];
+for (int i = 0; i < n; i++)
+. {
+rem_bt[i] = bt[i]; // Initialize remaining burst times
+}
+int time = 0; // Time
+tracker while (1)
+{
+int done = 1;
+for (int i = 0; i < n; i++)
+{
+if (rem_bt[i] > 0)
+{
+done = 0;
+if (rem_bt[i] > quantum)
+{
+time += quantum;
+rem_bt[i] -=
+
+29
+
+30
+
+31
+
+32
+
+quantum;
+}
+else
+{
+time += rem_bt[i];
+wt[i] = time - bt[i]; // Waiting time = time spent - burst time
+rem_bt[i] = 0; // Process completed
+}
+}
+}
+if (done == 1) {
+break; // Exit when all processes are done
+}
+}
+}
+void findTurnaroundTime(int processes[], int n, int bt[], int wt[], int tat[])
+{
+// Turnaround Time = Burst Time + Waiting
+Time for (int i = 0; i < n; i++)
+{
+tat[i] = bt[i] + wt[i];
+}
+}
+void findAverageTimes(int processes[], int n, int wt[], int tat[])
+{
+int total_wt = 0, total_tat = 0;
+// Calculate total waiting time and turnaround
+time for (int i = 0; i < n; i++)
+{
+total_wt +=
+wt[i]; total_tat
++= tat[i];
+}
+// Print average waiting time and turnaround time
+printf("\nAverage Waiting Time: %.2f", (float)total_wt / n);
+printf("\nAverage Turnaround Time: %.2f", (float)total_tat /n);
+}
+void roundRobinScheduling(int processes[], int n, int bt[], int quantum)
+{
+int wt[n], tat[n];
+// Find waiting time and turnaround time
+findWaitingTime(processes, n, bt, wt, quantum);
+findTurnaroundTime(processes, n, bt, wt, tat);
+// Print process details
+printf("\nProcess ID\tBurst Time\tWaiting Time\tTurnaround
+Time\n"); for (int i = 0; i < n; i++)
+{
+printf("%d\t\t%d\t\t%d\t\t%d\n", processes[i], bt[i], wt[i], tat[i]);
+}
+/ Calculate and print average times
+findAverageTimes(processes, n, wt, tat);
+}
+int main()
+{
+int n, quantum;
+// Input number of processes and time
+quantum printf("Enter the number of
+processes: "); scanf("%d", &n);
+int processes[n], burst_time[n];
+// Input burst time for each process
+printf("Enter the burst time for each process:
+\n"); for (int i = 0; i < n; i++)
+{
+processes[i] = i + 1; // Assign process ID starting
+from 1 printf("P%d: ", i + 1);
+scanf("%d", &burst_time[i]);
+}
+// Input time quantum for Round Robin scheduling
+printf("Enter the time quantum: ");
+scanf("%d", &quantum);
+// Call the Round Robin scheduling function
+roundRobinScheduling(processes, n, burst_time,
+quantum); return 0;
+}
+
+Sample Input and Output:
+
+Enter the number of processes: 4
+Enter the burst time for each
+process: P1: 5
+P2: 9
+P3: 6
+P4: 7
+Enter the time quantum: 4
+Process ID Burst Time Waiting Time Turnaround
+
+Time
+1 5 6 11
+2 9 12 21
+3 6 11 17
+4 7 13 20
+Average Waiting Time: 10.50
+Average Turnaround Time:
+17.25
