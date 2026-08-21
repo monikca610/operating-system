@@ -1,0 +1,11 @@
+echo "Enter two numbers" read a b
+t=$a
+a=$b
+b=$t
+echo "a=$a b=$b"
+
+Output:
+Enter two
+numbers 4 7
+a=7
+b=4
