@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+// Function executed by each thread
+void *thread_function(void *arg)
+{
+int thread_id = *(int *)arg;
+printf("Thread %d is running...\n", thread_id);
+// Simulate some work
+for(int i = 1; i <= 5; i++)
+{
+printf("Thread %d : Count = %d\n", thread_id, i);
+}
+printf("Thread %d has finished.\n", thread_id);
+
+pthread_exit(NULL);
+}
+int main()
+{
+pthread_t threads[3];
+int thread_ids[3];
+// Create three threads
+for(int i = 0; i < 3; i++)
+{
+thread_ids[i] = i + 1;
+if(pthread_create(&threads[i], NULL, thread_function, &thread_ids[i]) != 0)
+{
+printf("Error creating thread %d\n", i + 1);
+return 1;
+}
+}
+// Wait for all threads to complete
+for(int i = 0; i < 3; i++)
+{
+pthread_join(threads[i], NULL);
+}
+printf("\nAll threads have completed execution.\n");
+return 0;
+}
+
+Output:
+
+Thread 1 is running...
+Thread 1 : Count = 1
+Thread 1 : Count = 2
+Thread 1 : Count = 3
+Thread 1 : Count = 4
+Thread 1 : Count = 5
+Thread 1 has finished.
+Thread 2 is running...
+Thread 2 : Count = 1
+Thread 2 : Count = 2
+Thread 2 : Count = 3
+Thread 2 : Count = 4
+Thread 2 : Count = 5
+Thread 2 has finished.
+Thread 3 is running...
+Thread 3 : Count = 1
+Thread 3 : Count = 2
+Thread 3 : Count = 3
+Thread 3 : Count = 4
+Thread 3 : Count = 5
+Thread 3 has finished.
+All threads have completed execution.
