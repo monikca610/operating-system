@@ -1,0 +1,12 @@
+echo "Enter a number" read a
+if [ $a -ge 0
+] then
+echo "$a is
+positive" else
+echo "$a is negative"
+fi
+
+Output:
+Enter a
+number 5
+5 is positive
